@@ -1,0 +1,64 @@
+# Swift Package Manager
+.build/
+.swiftpm/
+Package.resolved
+*.xcodeproj
+xcuserdata/
+
+# Build artifacts
+build/
+Output/
+DerivedData/
+
+# Vendor directory (espeak-ng source)
+vendor/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Xcode
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+*.xccheckout
+*.moved-aside
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# CocoaPods
+Pods/
+
+# Carthage
+Carthage/
+
+# Compiled files
+*.o
+*.lo
+*.a
+*.la
+*.so
+*.dylib
+
+# espeak-ng specific
+autom4te.cache/
+config.log
+config.status
+Makefile
+.deps/
+.libs/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
