@@ -1,5 +1,7 @@
 # eSpeak NG Swift Package
 
+[![CI](https://github.com/intrusive-memory/espeak/actions/workflows/ci.yml/badge.svg)](https://github.com/intrusive-memory/espeak/actions/workflows/ci.yml)
+
 A Swift Package wrapper for [eSpeak NG](https://github.com/espeak-ng/espeak-ng), an open source speech synthesis library.
 
 ## Purpose
