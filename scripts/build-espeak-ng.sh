@@ -150,7 +150,18 @@ copy_data() {
         exit 1
     fi
 
+    # Ensure Resources directory exists
+    mkdir -p "$PROJECT_ROOT/Sources/EspeakNG/Resources"
+
+    # Copy data
     cp -r "$data_source" "$PROJECT_ROOT/Sources/EspeakNG/Resources/"
+
+    # Verify it was copied
+    if [ ! -d "$PROJECT_ROOT/Sources/EspeakNG/Resources/espeak-ng-data" ]; then
+        echo_error "Failed to copy espeak-ng-data"
+        exit 1
+    fi
+
     echo_info "Data copied to Sources/EspeakNG/Resources/espeak-ng-data"
 }
 
