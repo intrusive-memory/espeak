@@ -88,9 +88,9 @@ public class EspeakSynthesizer {
             0,  // position
             POS_CHARACTER,
             0,  // end position (0 = no end position)
-            espeakCHARS_UTF8,
+            UInt32(espeakCHARS_UTF8),
             nil,  // user identifier
-            nil   // callback
+            nil   // user data
         )
 
         guard result == EE_OK else {
@@ -114,10 +114,10 @@ public class EspeakSynthesizer {
             throw SynthesisError.notInitialized
         }
 
-        espeak_SetParameter(RATE, Int32(configuration.speed), 0)
-        espeak_SetParameter(PITCH, Int32(configuration.pitch), 0)
-        espeak_SetParameter(VOLUME, Int32(configuration.volume), 0)
-        espeak_SetParameter(WORDGAP, Int32(configuration.wordGap), 0)
+        espeak_SetParameter(espeakRATE, Int32(configuration.speed), 0)
+        espeak_SetParameter(espeakPITCH, Int32(configuration.pitch), 0)
+        espeak_SetParameter(espeakVOLUME, Int32(configuration.volume), 0)
+        espeak_SetParameter(espeakWORDGAP, Int32(configuration.wordGap), 0)
     }
 
     /// Get the path to bundled espeak-ng-data
@@ -140,14 +140,18 @@ public class EspeakSynthesizer {
     /// List available voices
     public static func availableVoices() -> [String] {
         var voices: [String] = []
-        var voicePtr = espeak_ListVoices(nil)
+        guard let voiceList = espeak_ListVoices(nil) else {
+            return voices
+        }
 
-        while let voice = voicePtr?.pointee {
+        var index = 0
+        while let voicePtr = voiceList[index] {
+            let voice = voicePtr.pointee
             if let namePtr = voice.name {
                 let name = String(cString: namePtr)
                 voices.append(name)
             }
-            voicePtr = voicePtr?.successor()
+            index += 1
         }
 
         return voices

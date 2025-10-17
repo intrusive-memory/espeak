@@ -8,6 +8,101 @@ A Swift Package wrapper for [eSpeak NG](https://github.com/espeak-ng/espeak-ng),
 
 This repository provides a Swift Package Manager-compatible wrapper around the eSpeak NG speech synthesis library, enabling easy integration into Swift packages and Xcode projects. eSpeak NG is a compact, multilingual text-to-speech synthesizer that supports over 100 languages and accents.
 
+## Quick Start
+
+### Installation
+
+Add the package to your `Package.swift` dependencies:
+
+```swift
+dependencies: [
+    .package(url: "https://github.com/intrusive-memory/espeak.git", from: "1.0.0")
+]
+```
+
+Or in Xcode:
+1. File → Add Package Dependencies
+2. Enter: `https://github.com/intrusive-memory/espeak.git`
+3. Add to your target
+
+### Basic Usage
+
+```swift
+import EspeakNG
+
+// Initialize the synthesizer
+let synthesizer = try EspeakSynthesizer()
+
+// Speak some text
+try synthesizer.speak("Hello, world!")
+
+// Speak in different languages
+try synthesizer.speak("Hola, mundo!", language: "es")
+try synthesizer.speak("Bonjour le monde!", language: "fr")
+```
+
+### Custom Configuration
+
+```swift
+import EspeakNG
+
+// Create custom configuration
+var config = EspeakSynthesizer.Configuration()
+config.pitch = 75      // 0-99 (50 is default)
+config.speed = 200     // words per minute (175 is default)
+config.volume = 150    // 0-200 (100 is default)
+config.wordGap = 10    // pause between words in 10ms units
+
+// Initialize with configuration
+let synthesizer = try EspeakSynthesizer(configuration: config)
+try synthesizer.speak("This speech has custom settings")
+
+// Update configuration at runtime
+var newConfig = EspeakSynthesizer.Configuration()
+newConfig.speed = 250
+try synthesizer.updateConfiguration(newConfig)
+```
+
+### List Available Voices
+
+```swift
+let voices = EspeakSynthesizer.availableVoices()
+print("Available voices: \(voices.joined(separator: ", "))")
+```
+
+### SwiftUI Example
+
+```swift
+import SwiftUI
+import EspeakNG
+
+struct ContentView: View {
+    @State private var text = "Hello from eSpeak NG!"
+    @State private var synthesizer: EspeakSynthesizer?
+
+    var body: some View {
+        VStack(spacing: 20) {
+            TextEditor(text: $text)
+                .frame(height: 100)
+                .border(Color.gray)
+
+            Button("Speak") {
+                Task {
+                    try? synthesizer?.speak(text)
+                }
+            }
+            .buttonStyle(.borderedProminent)
+        }
+        .padding()
+        .onAppear {
+            synthesizer = try? EspeakSynthesizer()
+        }
+    }
+}
+```
+
+For more detailed examples, see [USAGE.md](USAGE.md).
+
 ## Project Goals
 
 1. **Native Integration** - Package eSpeak NG as a first-class Swift dependency that can be added via Swift Package Manager
