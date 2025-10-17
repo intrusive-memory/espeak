@@ -145,7 +145,8 @@ public class EspeakSynthesizer {
         }
 
         var index = 0
-        while let voicePtr = voiceList[index], let voice = voicePtr.pointee {
+        while let voicePtr = voiceList[index] {
+            let voice = voicePtr.pointee
             if let namePtr = voice.name {
                 let name = String(cString: namePtr)
                 voices.append(name)
