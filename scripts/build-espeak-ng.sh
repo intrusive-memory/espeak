@@ -83,7 +83,9 @@ build_for_arch() {
     # Configure and build
     echo_info "Configuring..."
     CC=clang \
+    CXX=clang++ \
     CFLAGS="$cflags" \
+    CXXFLAGS="$cflags" \
     LDFLAGS="$ldflags" \
     ./configure \
         --prefix="$build_path" \
@@ -158,14 +160,25 @@ main() {
 
     clean_build
 
-    # Build for macOS
-    build_for_arch "macos" "x86_64" "macosx" "11.0"
-    build_for_arch "macos" "arm64" "macosx" "11.0"
+    # Detect native architecture
+    local native_arch=$(uname -m)
+    echo_info "Native architecture: $native_arch"
 
-    # Build for iOS (uncomment when ready to support iOS)
-    # build_for_arch "ios" "arm64" "iphoneos" "14.0"
-    # build_for_arch "iossimulator" "x86_64" "iphonesimulator" "14.0"
-    # build_for_arch "iossimulator" "arm64" "iphonesimulator" "14.0"
+    # In CI or for quick builds, only build for native architecture
+    if [ -n "$CI" ] || [ "$1" == "--native-only" ]; then
+        echo_info "Building for native architecture only..."
+        build_for_arch "macos" "$native_arch" "macosx" "11.0"
+    else
+        # Build for both architectures for local development
+        echo_info "Building for multiple architectures..."
+        build_for_arch "macos" "x86_64" "macosx" "11.0"
+        build_for_arch "macos" "arm64" "macosx" "11.0"
+
+        # Build for iOS (uncomment when ready to support iOS)
+        # build_for_arch "ios" "arm64" "iphoneos" "14.0"
+        # build_for_arch "iossimulator" "x86_64" "iphonesimulator" "14.0"
+        # build_for_arch "iossimulator" "arm64" "iphonesimulator" "14.0"
+    fi
 
     # Create XCFramework
     create_xcframework
